@@ -13,24 +13,29 @@ function App() {
   });
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      stayLoggedIn(user);
-    }
-  }, [state]);
+    console.log("useEffect");
+    stayLoggedIn();
+  }, []);
 
-  const stayLoggedIn = (user) => {
-    setState({
-      username: user.username,
-      loggedIn: true,
-    });
+  const stayLoggedIn = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log("inside stayedlogged in");
+    if (user) {
+      console.log("before set state");
+      setState({
+        username: user.username,
+        loggedIn: true,
+      });
+      console.log("after set state");
+    }
   };
-  const updateUsername = (username) => {
-    setState({ username });
+
+  const updateUsername = (name) => {
+    setState((prevState) => ({ ...prevState, username: name }));
   };
 
   const toggleLoggedIn = () => {
-    setState({ loggedIn: !state.loggedIn });
+    setState((prevState) => ({ ...prevState, loggedIn: !state.loggedIn }));
   };
 
   const clearUser = () => {

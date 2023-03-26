@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Navigate } from "react-router";
 
 function SignUp(props) {
-  const { updateUsername, toggleLoggedIn, loggedIn } = props;
+  const { loggedIn } = props;
 
   const [state, setState] = useState({
     username: "",
