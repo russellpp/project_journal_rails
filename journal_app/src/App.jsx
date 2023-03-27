@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Route, Routes, Navigate } from "react-router";
+import { useFetch } from "./hooks/useFetch";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
@@ -9,7 +10,8 @@ import "./App.css";
 
 function App() {
   const navigate = useNavigate();
-  const [token, setToken] = useState()
+  const { getAll } = useFetch();
+  const [token, setToken] = useState(null);
   const [state, dispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
@@ -35,18 +37,22 @@ function App() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      console.log("setting user state");
-      dispatch({
-        type: "LOGIN",
-        payload: {
-          username: user.username,
-        },
-      });
-      setToken(user?.token)
+    if (state.loggedIn) {
+      getAll("tasks", user.token);
+      getAll("categories", user.token);
       navigate("/dashboard");
     }
-  }, []);
+  }, [state]);
+
+  const updateLogin = (name, token) => {
+    dispatch({
+      type: "LOGIN",
+      payload: {
+        username: name,
+      },
+    });
+    setToken(token);
+  };
 
   const clearUser = () => {
     dispatch({
@@ -57,7 +63,12 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login loggedIn={state.loggedIn} />} />
+        <Route
+          path="/login"
+          element={
+            <Login loggedIn={state.loggedIn} updateLogin={updateLogin} />
+          }
+        />
         <Route
           path="/logout"
           element={<Logout loggedIn={state.loggedIn} clearUser={clearUser} />}
@@ -65,7 +76,11 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <Dashboard username={state.username} loggedIn={state.loggedIn} token={token} />
+            <Dashboard
+              username={state.username}
+              loggedIn={state.loggedIn}
+              token={token}
+            />
           }
         />
         <Route path="/signup" element={<SignUp loggedIn={state.loggedIn} />} />

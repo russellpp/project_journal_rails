@@ -10,16 +10,9 @@ function Dashboard(props) {
   const { getAll } = useFetch();
   const handleSubmit = () => {
     console.log("fetching");
-    fetchAllTasks(token);
     console.log("fetch finsihed");
   };
 
-  useEffect(() => {
-    if (loggedIn) {
-      getAll("tasks", token);
-      getAll("categories", token);
-    }
-  }, [token]);
 
   return (
     <>
