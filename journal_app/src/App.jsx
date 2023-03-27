@@ -4,11 +4,12 @@ import { Route, Routes, Navigate } from "react-router";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
-import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard";
 import "./App.css";
 
 function App() {
   const navigate = useNavigate();
+  const [token, setToken] = useState()
   const [state, dispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
@@ -42,7 +43,8 @@ function App() {
           username: user.username,
         },
       });
-      navigate("/profile");
+      setToken(user?.token)
+      navigate("/dashboard");
     }
   }, []);
 
@@ -61,9 +63,9 @@ function App() {
           element={<Logout loggedIn={state.loggedIn} clearUser={clearUser} />}
         />
         <Route
-          path="/profile"
+          path="/dashboard"
           element={
-            <Profile username={state.username} loggedIn={state.loggedIn} />
+            <Dashboard username={state.username} loggedIn={state.loggedIn} token={token} />
           }
         />
         <Route path="/signup" element={<SignUp loggedIn={state.loggedIn} />} />

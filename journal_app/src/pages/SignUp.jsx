@@ -73,7 +73,7 @@ function SignUp(props) {
             Already have an account? <a href="/login">Login</a>
           </p>
         </form>
-        {loggedIn ? <Navigate to="/profile" /> : null}
+        {loggedIn ? <Navigate to="/dashboard" /> : null}
         {state.displayError ? (
           <p className="error-message">{state.displayError}</p>
         ) : null}
