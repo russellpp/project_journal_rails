@@ -33,7 +33,6 @@ function SignUp(props) {
           setState({ displayError: data.error });
         } else {
           console.log(data);
-          props.updateUsername(data.user.username);
           localStorage.clear();
           const userInfo = {
             id: data.user.id,
@@ -41,7 +40,6 @@ function SignUp(props) {
             token: data.jwt,
           };
           localStorage.setItem("user", JSON.stringify(userInfo));
-          props.toggleLoggedIn();
         }
       });
   };

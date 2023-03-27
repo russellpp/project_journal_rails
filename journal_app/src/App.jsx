@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useReducer, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Route, Routes, Navigate } from "react-router";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
@@ -7,58 +8,54 @@ import Profile from "./pages/Profile";
 import "./App.css";
 
 function App() {
-  const [state, setState] = useState({
-    username: "",
-    loggedIn: false,
-  });
+  const navigate = useNavigate();
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case "LOGIN":
+          return {
+            username: action.payload.username,
+            loggedIn: true,
+          };
+        case "LOGOUT":
+          return {
+            username: "",
+            loggedIn: false,
+          };
+        default:
+          return state;
+      }
+    },
+    {
+      username: "",
+      loggedIn: false,
+    }
+  );
 
   useEffect(() => {
-    console.log("useEffect");
-    stayLoggedIn();
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      console.log("setting user state");
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          username: user.username,
+        },
+      });
+      navigate("/profile");
+    }
   }, []);
 
-  const stayLoggedIn = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    console.log("inside stayedlogged in");
-    if (user) {
-      console.log("before set state");
-      setState({
-        username: user.username,
-        loggedIn: true,
-      });
-      console.log("after set state");
-    }
-  };
-
-  const updateUsername = (name) => {
-    setState((prevState) => ({ ...prevState, username: name }));
-  };
-
-  const toggleLoggedIn = () => {
-    setState((prevState) => ({ ...prevState, loggedIn: !state.loggedIn }));
-  };
-
   const clearUser = () => {
-    localStorage.clear();
-    updateUsername("");
-    toggleLoggedIn();
+    dispatch({
+      type: "LOGOUT",
+    });
   };
 
   return (
     <>
-      {state.loggedIn ? <Navigate to="/profile" /> : null}
-
       <Routes>
-        <Route
-          path="/login"
-          element={
-            <Login
-              updateUsername={updateUsername}
-              toggleLoggedIn={toggleLoggedIn}
-              loggedIn={state.loggedIn}
-            />
-          }
-        />
+        <Route path="/login" element={<Login loggedIn={state.loggedIn} />} />
         <Route
           path="/logout"
           element={<Logout loggedIn={state.loggedIn} clearUser={clearUser} />}
@@ -69,26 +66,8 @@ function App() {
             <Profile username={state.username} loggedIn={state.loggedIn} />
           }
         />
-        <Route
-          path="/signup"
-          element={
-            <SignUp
-              updateUsername={updateUsername}
-              toggleLoggedIn={toggleLoggedIn}
-              loggedIn={state.loggedIn}
-            />
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <SignUp
-              updateUsername={updateUsername}
-              toggleLoggedIn={toggleLoggedIn}
-              loggedIn={state.loggedIn}
-            />
-          }
-        />
+        <Route path="/signup" element={<SignUp loggedIn={state.loggedIn} />} />
+        <Route path="/" element={<SignUp loggedIn={state.loggedIn} />} />
       </Routes>
     </>
   );

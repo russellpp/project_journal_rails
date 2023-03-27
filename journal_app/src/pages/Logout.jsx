@@ -7,7 +7,6 @@ function Logout(props) {
   return (
     <>
       {clearUser()}
-      {loggedIn ? <Navigate to="/login" /> : null}
     </>
   );
 }

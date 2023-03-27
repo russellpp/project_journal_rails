@@ -1,9 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import { Navigate } from "react-router";
+import { useNavigate, Navigate } from "react-router";
 
 function Login(props) {
-  const { updateUsername, toggleLoggedIn, loggedIn } = props;
+  const { loggedIn, setIsLoggedIn } = props;
+  const navigate = useNavigate();
 
   const [state, setState] = useState({
     username: "",
@@ -32,7 +33,6 @@ function Login(props) {
           setState({ displayError: data.error });
         } else {
           console.log(data);
-          props.updateUsername(data.user.username);
           localStorage.clear();
           const userInfo = {
             id: data.user.id,
@@ -40,7 +40,8 @@ function Login(props) {
             token: data.jwt,
           };
           localStorage.setItem("user", JSON.stringify(userInfo));
-          props.toggleLoggedIn();
+          localStorage.setItem("logged_in", true);
+          navigate("/profile");
         }
       });
   };
