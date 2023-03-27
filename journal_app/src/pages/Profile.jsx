@@ -1,6 +1,7 @@
 import React from "react";
 
-function Profile() {
+function Profile(props) {
+  const { username } = props;
   const user = localStorage.getItem("user");
   const token = JSON.parse(user).token;
   const handleSubmit = () => {
@@ -18,7 +19,12 @@ function Profile() {
       .catch((error) => console.log(error));
   };
 
-  return <button onClick={handleSubmit}>Check Button</button>;
+  return (
+    <>
+      <h1>Hello {username}</h1>
+      <button onClick={handleSubmit}>Check Button</button>;
+    </>
+  );
 }
 
 export default Profile;
