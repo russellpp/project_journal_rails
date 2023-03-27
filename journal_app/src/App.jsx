@@ -41,6 +41,7 @@ function App() {
       getAll("tasks", user.token);
       getAll("categories", user.token);
       navigate("/dashboard");
+      console.log(state);
     }
   }, [state]);
 
