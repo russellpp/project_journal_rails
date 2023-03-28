@@ -15,22 +15,14 @@ function ViewTasks(props) {
     delete: false,
   });
 
-  const handleOpen = () => {
-    console.log("setting modal");
-    setOpenModals({
-      new: true,
-      sort: false,
-      edit: false,
-      delete: false,
-    });
-  };
-
   return (
     <ViewWrapper>
+      {openModals.new && (
+        <NewModal openModals={openModals} setOpenModals={setOpenModals} allCategories={allCategories} />
+      )}
       <ViewOptions>
         <SortButton />
-        <AddButton handleOpen={handleOpen} />
-        {openModals?.new && NewModal}
+        <AddButton openModals={openModals} setOpenModals={setOpenModals} />
       </ViewOptions>
       <ListWrapper>
         <List>

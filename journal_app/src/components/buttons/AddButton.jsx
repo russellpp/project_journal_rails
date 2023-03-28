@@ -2,8 +2,20 @@ import { Add } from "@material-ui/icons";
 import styled from "styled-components";
 import React from "react";
 
-function AddButton(handleOpen) {
-  const { handleOpen } = props;
+function AddButton(props) {
+  const { openModals, setOpenModals } = props;
+
+  const handleOpen = () => {
+    console.log("hello");
+    setOpenModals((prevState) => ({
+      ...prevState,
+      new: !prevState.new,
+      sort: false,
+      edit: false,
+      delete: false,
+    }));
+  };
+
   return (
     <Button onClick={handleOpen}>
       <AddIcon />

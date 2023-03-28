@@ -5,8 +5,10 @@
   --gray: #212124;
   --lighterGray: #afb4b4;
   --lightGray: #818181;
-  --yellow: #e8ac1e;
+  --yellow: #c2901b;
   --blue: #446cb3;
+  --lightBlue: #1b90c2;
+  --burgundy: #591818;
   @font-face {
     font-family: "Open Sans";
     src: url("/assets/OpenSans.woff2") format("woff2");

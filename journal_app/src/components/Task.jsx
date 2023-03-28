@@ -16,14 +16,12 @@ function Task(props) {
   const { task, allCategories } = props;
   const [isChecked, setIsChecked] = useState(false);
   const [priorityStatus, setPriorityStatus] = useState("normal");
+  const [taskCategory, setTaskCategory] = useState("");
 
   useEffect(() => {
     setPriorityStatus(task.priority);
+    setTaskCategory(allCategories.find((cat) => cat.id === task.category_id));
   }, []);
-
-  const findCategory = () => {
-    allCategories.find((cat) => cat.id === task.category_id).name;
-  };
 
   const handleCheck = (event) => {
     setIsChecked(event.target.checked);
@@ -37,7 +35,7 @@ function Task(props) {
       <DueDate>Due on {convertToDate(task.due_date)}</DueDate>
       <Name>{task.name}</Name>
       <Category color={getColorById(task.category_id)}>
-        {allCategories.find((cat) => cat.id === task.category_id).name}
+        {taskCategory?.name}
       </Category>
       <Description>{task.description}</Description>
       <Priority>
