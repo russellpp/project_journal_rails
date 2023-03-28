@@ -1,29 +1,77 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useFetch } from "../hooks/useFetch";
 import styled from "styled-components";
 import OptionsSlider from "../components/OptionsSlider";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import ViewToday from "../components/ViewToday";
+import ViewTasks from "../components/ViewTasks";
+import ViewCategories from "../components/ViewCategories";
+import ViewCategory from "../components/ViewCategory";
+import ViewCalendar from "../components/ViewCalendar";
 
 function Dashboard(props) {
-  const { username, token, loggedIn } = props;
+  const {
+    username,
+    token,
+    loggedIn,
+    isUpdating,
+    setIsUpdating,
+    allTasks,
+    setAllTasks,
+    allCategories,
+    setAllCategories,
+  } = props;
+  const navigate = useNavigate();
+  const [view, setView] = useState("Today");
   const { getItem } = useLocalStorage();
   const { getAll } = useFetch();
-  const handleSubmit = () => {
-    console.log("fetching");
-    console.log("fetch finsihed");
+
+  useEffect(() => {
+    navigate(`/dashboard/${view.toLowerCase()}`);
+  }, [view]);
+
+  useEffect(() => {
+    setIsUpdating(true);
+  }, []);
+
+  useEffect(() => {
+    if (isUpdating) {
+      setAllTasks(getItem("tasks"));
+      setAllCategories(getItem("categories"));
+      setIsUpdating(false);
+    }
+  }, [isUpdating]);
+
+  const updateUp = () => {
+    console.log("isupdating");
+    setIsUpdating(true);
   };
-
-
 
   return (
     <PageWrapper>
       <Header>
         <h1>Hello {username}</h1>
+        <button onClick={updateUp}></button>
         <ViewType>
-          <OptionsSlider />
+          <OptionsSlider view={view} setView={setView} />
         </ViewType>
       </Header>
-      <Body></Body>
+      <Body>
+        <Routes>
+          <Route path="/today" element={<ViewToday />} />
+          <Route
+            path="/tasks"
+            element={
+              <ViewTasks allTasks={allTasks} allCategories={allCategories} />
+            }
+          />
+          <Route path="/categories" element={<ViewCategories />} />
+          <Route path="/category" element={<ViewCategory />} />
+          <Route path="/calendar" element={<ViewCalendar />} />
+          <Route path="/*" element={<Navigate to="/dashboard/today" />} />
+        </Routes>
+      </Body>
     </PageWrapper>
   );
 }
@@ -37,12 +85,16 @@ const PageWrapper = styled.div`
 `;
 
 const Body = styled.div`
+  overflow-x: hidden;
+  overflow-y: hidden;
   height: 85%;
   width: 90%;
   max-width: 1000px;
   margin: 0 auto 30px;
   border-radius: 20px;
   background-color: var(--darkGray);
+  padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Header = styled.div`
@@ -56,6 +108,7 @@ const Header = styled.div`
 `;
 const ViewType = styled.div`
   border: 1px white;
+  overflow-x: visible;
 `;
 
 export default Dashboard;

@@ -1,11 +1,19 @@
 :root {
-  --white: #ffffffde;
+  --white: #fefefe;
   --black: #000000;
   --darkGray: #161618;
   --gray: #212124;
+  --lighterGray: #afb4b4;
   --lightGray: #818181;
+  --yellow: #e8ac1e;
+  --blue: #446cb3;
+  @font-face {
+    font-family: "Open Sans";
+    src: url("/assets/OpenSans.woff2") format("woff2");
+  }
 }
 
 * {
   margin: 0;
+  font-family: "Open Sans", sans-serif;
 }

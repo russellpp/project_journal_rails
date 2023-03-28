@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const OptionSlider = () => {
-  const [selectedOption, setSelectedOption] = useState("Option 1");
-  const options = ["Tasks", "Categories", "Select Category", "Calendar"];
+const OptionSlider = (props) => {
+  const { view, setView } = props;
+  const options = ["Today", "Tasks", "Categories", "Category", "Calendar"];
 
   const handleOptionClick = (index) => {
-    setSelectedOption(options[index]);
+    setView(options[index]);
   };
 
   const sliderSettings = {
@@ -18,8 +18,6 @@ const OptionSlider = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    centerMode: true,
-    centerPadding: "60px",
     beforeChange: (current, next) => {
       handleOptionClick(next);
     },
@@ -29,7 +27,7 @@ const OptionSlider = () => {
 
   return (
     <SliderContainer>
-      <h3>Selected option: {selectedOption}</h3>
+      <h3>Selected option: {view}</h3>
       <Slider {...sliderSettings}>
         {options.map((option, index) => (
           <div key={index}>
@@ -42,8 +40,9 @@ const OptionSlider = () => {
 };
 
 const SliderContainer = styled.div`
-  width: 800px;
+  width: 700px;
   margin: 0 auto;
+  overflow-x: visible;
 
   .slick-slide {
     margin: 0 20px;

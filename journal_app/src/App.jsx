@@ -6,12 +6,14 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Dashboard from "./pages/Dashboard";
-import "./App.css";
 
 function App() {
   const navigate = useNavigate();
   const { getAll } = useFetch();
   const [token, setToken] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [allTasks, setAllTasks] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
   const [state, dispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
@@ -41,7 +43,7 @@ function App() {
       getAll("tasks", user.token);
       getAll("categories", user.token);
       navigate("/dashboard");
-      console.log(state);
+      setIsUpdating(true);
     }
   }, [state]);
 
@@ -75,17 +77,22 @@ function App() {
           element={<Logout loggedIn={state.loggedIn} clearUser={clearUser} />}
         />
         <Route
-          path="/dashboard"
+          path="/dashboard/*"
           element={
             <Dashboard
+              allCategories={allCategories}
+              setAllCategories={setAllCategories}
+              allTasks={allTasks}
+              setAllTasks={setAllTasks}
               username={state.username}
               loggedIn={state.loggedIn}
               token={token}
+              isUpdating={isUpdating}
+              setIsUpdating={setIsUpdating}
             />
           }
         />
         <Route path="/signup" element={<SignUp loggedIn={state.loggedIn} />} />
-        <Route path="/" element={<SignUp loggedIn={state.loggedIn} />} />
       </Routes>
     </>
   );
