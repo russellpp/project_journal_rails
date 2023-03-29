@@ -36,7 +36,7 @@ export const useFetch = () => {
     }
   };
 
-  const getAll = async (model, token, setIsUpdating) => {
+  const getAll = async (model, token) => {
     const PATH_KEY = model === "tasks" ? "tasks" : "categories";
     console.log(`getting ${model}`);
     try {
@@ -49,7 +49,6 @@ export const useFetch = () => {
       });
       const data = await response.json();
       setItem(model, data);
-      setIsUpdating(true);
     } catch (error) {
       console.log(error);
     }
@@ -97,11 +96,83 @@ export const useFetch = () => {
         }));
       }
     } catch (error) {
-      console.log(error);
-      console.log("setting errors");
       setErrors(error);
     }
   };
 
-  return { getAll, logIn, createModel };
+  const editModel = async (
+    model,
+    token,
+    post_details,
+    setErrors,
+    setIsUpdating,
+    setIsModalOpen
+  ) => {
+    const PATH_KEY =
+      model === "task"
+        ? `categories/${post_details.category_id}/tasks/${post_details.id}`
+        : `categories/${post_details.id}`;
+    console.log(`getting ${model}`);
+    try {
+      const response = await fetch(`${HOST_URL}/api/v1/${PATH_KEY}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(post_details),
+      });
+      const data = await response.json();
+      if (response.status === 422) {
+        console.log("setting errors");
+        setErrors({
+          status: true,
+          error_msg: data,
+        });
+      } else {
+        navigate("/dashboard/tasks");
+        console.log("setisupdating");
+        setIsUpdating(true);
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      setErrors(error);
+    }
+  };
+
+  const deleteModel = async (
+    model,
+    token,
+    post_details,
+    setErrors,
+    setIsUpdating,
+    setIsModalOpen
+  ) => {
+    const PATH_KEY =
+      model === "task"
+        ? `categories/${post_details.category_id}/tasks/${post_details.id}`
+        : `categories/${post_details.id}`;
+    console.log(`deleting ${model}`);
+    console.log(token);
+    try {
+      const response = await fetch(`${HOST_URL}/api/v1/${PATH_KEY}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.headers.get("Content-Type"));
+      const data = await response.json();
+      console.log("item deleted");
+      navigate("/dashboard/tasks");
+      console.log("setisupdating");
+      setIsUpdating(true);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log(error);
+      setErrors(error);
+    }
+  };
+
+  return { getAll, logIn, createModel, editModel, deleteModel };
 };

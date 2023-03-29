@@ -3,9 +3,14 @@ import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 
-function EditButton() {
+function EditButton(props) {
+  const { setIsEditopen } = props;
+  const handleOpen = () => {
+    console.log("opening edit");
+    setIsEditopen(true)
+  };
   return (
-    <Button>
+    <Button onClick={handleOpen}>
       <StyledEditIcon />
     </Button>
   );

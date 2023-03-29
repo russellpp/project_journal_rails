@@ -5,9 +5,17 @@ import AddButton from "./buttons/AddButton";
 import SortButton from "./buttons/SortButton";
 import { useState, useEffect } from "react";
 import NewModal from "./modals/NewModal";
+import EditModal from "./modals/EditModal";
 
 function ViewTasks(props) {
-  const { allTasks, allCategories, errors, setErrors, isUpdating, setIsUpdating } = props;
+  const {
+    allTasks,
+    allCategories,
+    errors,
+    setErrors,
+    isUpdating,
+    setIsUpdating,
+  } = props;
   const [openModals, setOpenModals] = useState({
     new: false,
     sort: false,
@@ -34,7 +42,13 @@ function ViewTasks(props) {
         <List>
           {allTasks?.map((task, index) => {
             return (
-              <Task task={task} key={index} allCategories={allCategories} />
+              <Task
+                setErrors={setErrors}
+                task={task}
+                key={index}
+                allCategories={allCategories}
+                setIsUpdating={setIsUpdating}
+              />
             );
           })}
         </List>

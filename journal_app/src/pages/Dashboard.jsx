@@ -32,18 +32,6 @@ function Dashboard(props) {
     navigate(`/dashboard/${view.toLowerCase()}`);
   }, [view]);
 
-  useEffect(() => {
-    if (isUpdating) {
-      const token = getItem("user").token;
-      console.log("isupdating");
-      getAll("tasks", token);
-      getAll("categories", token);
-      setAllTasks(getItem("tasks"));
-      setAllCategories(getItem("categories"));
-      setIsUpdating(false);
-    }
-  }, [isUpdating]);
-
   const updateUp = () => {
     console.log("isupdating");
     setIsUpdating(true);

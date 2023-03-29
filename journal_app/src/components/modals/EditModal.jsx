@@ -13,41 +13,54 @@ import {
   SubmitButton,
   CancelButton,
   RadioContainer,
+  EditModalContainer,
 } from "./Modals";
 import { useFetch } from "../../hooks/useFetch";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { formatDateToYY } from "../../utils/UtilityFunctions";
 
-function NewModal(props) {
-  const { allCategories, openModals, setOpenModals, setIsUpdating, setErrors } =
+function EditModal(props) {
+  const { allCategories, task, setIsEditopen, setIsUpdating, setErrors } =
     props;
-  const { createModel } = useFetch();
+  const { editModel } = useFetch();
   const { getItem } = useLocalStorage();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const [taskDetails, setTaskDetails] = useState({
-    name: "",
+    id: task.id,
+    name: task.name,
     description: "",
     start_date: "",
     due_date: "",
     priority: "normal",
     task_status: "pending",
-    category_id: allCategories[selectedOptionIndex].id,
+    category_id: "",
   });
 
   useEffect(() => {
     setIsOpen(true);
-    console.log("is opening create");
+
+    setTaskDetails((prevState) => ({
+      ...prevState,
+      name: task.name,
+      description: task.description,
+      start_date: task.start_date,
+      due_date: task.due_date,
+      priority: "normal",
+      task_status: "pending",
+      category_id: task.category_id,
+    }));
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createModel(
+    editModel(
       "task",
       getItem("user").token,
       taskDetails,
       setErrors,
       setIsUpdating,
-      setOpenModals
+      setIsEditopen
     );
   };
 
@@ -62,18 +75,12 @@ function NewModal(props) {
   };
   const handleClose = () => {
     setIsOpen(false);
-    setOpenModals((prevState) => ({
-      ...prevState,
-      new: !prevState.new,
-      sort: false,
-      edit: false,
-      delete: false,
-    }));
+    setIsEditopen(false);
   };
 
   return (
-    <ModalContainer className={isOpen ? "open" : ""}>
-      <ModalHeader>New Task</ModalHeader>
+    <EditModalContainer className={isOpen ? "open" : ""}>
+      <ModalHeader>Edit Task</ModalHeader>
       <form onSubmit={handleSubmit}>
         <ModalBody>
           <FormLabel>Name:</FormLabel>
@@ -116,7 +123,7 @@ function NewModal(props) {
           <FormLabel>Starts on:</FormLabel>
           <FormInput
             type="datetime-local"
-            value={taskDetails.start_date}
+            value={formatDateToYY(taskDetails.start_date)}
             onChange={(e) =>
               setTaskDetails((prevState) => ({
                 ...prevState,
@@ -129,7 +136,7 @@ function NewModal(props) {
           <FormInput
             type="datetime-local"
             min={taskDetails.start_date}
-            value={taskDetails.due_date}
+            value={formatDateToYY(taskDetails.due_date)}
             onChange={(e) =>
               setTaskDetails((prevState) => ({
                 ...prevState,
@@ -191,8 +198,8 @@ function NewModal(props) {
           <CancelButton onClick={handleClose}>Cancel</CancelButton>
         </ModalFooter>
       </form>
-    </ModalContainer>
+    </EditModalContainer>
   );
 }
 
-export default NewModal;
+export default EditModal;

@@ -6,7 +6,6 @@ function AddButton(props) {
   const { openModals, setOpenModals } = props;
 
   const handleOpen = () => {
-    console.log("hello");
     setOpenModals((prevState) => ({
       ...prevState,
       new: !prevState.new,

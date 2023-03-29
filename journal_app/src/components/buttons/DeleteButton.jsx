@@ -3,9 +3,14 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { withStyles } from "@material-ui/core";
 import styled from "styled-components";
 
-function DeleteButton() {
+function DeleteButton(props) {
+  const { setIsDeleteOpen } = props;
+  const handleOpen = () => {
+    console.log("opening delete");
+    setIsDeleteOpen(true);
+  };
   return (
-    <Button>
+    <Button onClick={handleOpen}>
       <StyledDeleteIcon />
     </Button>
   );

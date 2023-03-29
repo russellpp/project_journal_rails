@@ -11,10 +11,14 @@ import {
   getColorById,
 } from "../utils/UtilityFunctions";
 import { priorityColors } from "../utils/Constants";
+import EditModal from "./modals/EditModal";
+import DeleteModal from "./modals/DeleteModal";
 
 function Task(props) {
-  const { task, allCategories } = props;
+  const { setErrors, task, allCategories, setIsUpdating } = props;
   const [isChecked, setIsChecked] = useState(false);
+  const [isEditOpen, setIsEditopen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [priorityStatus, setPriorityStatus] = useState("normal");
   const [taskCategory, setTaskCategory] = useState("");
 
@@ -28,29 +32,57 @@ function Task(props) {
   };
 
   return (
-    <TaskContainer>
-      <StartTime>{convertToHours(task.start_date)}</StartTime>
-      <StartDate>{convertToDate(task.start_date)}</StartDate>
-      <DueTime>{formatTimeLeft(task.due_date)}</DueTime>
-      <DueDate>Due on {convertToDate(task.due_date)}</DueDate>
-      <Name>{task.name}</Name>
-      <Category color={getColorById(task.category_id)}>
-        {taskCategory?.name}
-      </Category>
-      <Description>{task.description}</Description>
-      <Priority>
-        <PriorityMark color={priorityColors[priorityStatus]} />
-      </Priority>
-      <CheckBox>
-        <Checkbox checked={isChecked} onChange={handleCheck} />
-      </CheckBox>
-      <Edit>
-        <EditButton />
-      </Edit>
-      <Delete>
-        <DeleteButton />
-      </Delete>
-    </TaskContainer>
+    <>
+      {isEditOpen && (
+        <EditModal
+          allCategories={allCategories}
+          setErrors={setErrors}
+          setIsUpdating={setIsUpdating}
+          task={task}
+          setIsEditopen={setIsEditopen}
+        />
+      )}
+      {isDeleteOpen && (
+        <DeleteModal
+          allCategories={allCategories}
+          setErrors={setErrors}
+          setIsUpdating={setIsUpdating}
+          task={task}
+          setIsDeleteOpen={setIsDeleteOpen}
+        />
+      )}
+      <TaskContainer>
+        <StartTime>{convertToHours(task.start_date)}</StartTime>
+        <StartDate>{convertToDate(task.start_date)}</StartDate>
+        <DueTime>{formatTimeLeft(task.due_date)}</DueTime>
+        <DueDate>Due on {convertToDate(task.due_date)}</DueDate>
+        <Name>{task.name}</Name>
+        <Category color={getColorById(task.category_id)}>
+          {taskCategory?.name}
+        </Category>
+        <Description>{task.description}</Description>
+        <Priority>
+          <PriorityMark color={priorityColors[priorityStatus]} />
+        </Priority>
+        <CheckBox>
+          <Checkbox checked={isChecked} onChange={handleCheck} />
+        </CheckBox>
+        <Edit>
+          <EditButton
+            isEditOpen={isEditOpen}
+            setIsEditopen={setIsEditopen}
+            task={task}
+          />
+        </Edit>
+        <Delete>
+          <DeleteButton
+            task={task}
+            isDeleteOpen={isDeleteOpen}
+            setIsDeleteOpen={setIsDeleteOpen}
+          />
+        </Delete>
+      </TaskContainer>
+    </>
   );
 }
 
@@ -60,7 +92,7 @@ const TaskContainer = styled.div`
   color: white;
   display: grid;
   justify-items: center;
-  grid-template-columns: 10% 7% 15% 35% 15% 8% 5% 5%;
+  grid-template-columns: 10% 7% 25% 25% 15% 8% 5% 5%;
   grid-template-areas:
     "time1 prio name desc time2 check edit delete"
     "date1 prio category desc date2 check edit delete";

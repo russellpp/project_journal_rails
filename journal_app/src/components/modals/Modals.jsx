@@ -22,6 +22,28 @@ const ModalContainer = styled.div`
   }
 `;
 
+const EditModalContainer = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  box-sizing: content-box;
+  border-radius: 20px;
+  top: 40vh;
+  left: 50vw;
+  transform: translateX(-50%) translateY(-50%);
+  min-height: 200px;
+  height: auto;
+  width: 300px;
+  background-color: var(--lighterGray);
+  box-shadow: 0 0 0 20000px #00000076;
+  opacity: 0.2;
+  transition: opacity 0.15s ease-in-out;
+
+  &.open {
+    opacity: 1;
+  }
+`;
+
 const ErrorModalContainer = styled.div`
   position: absolute;
   display: flex;
@@ -35,10 +57,9 @@ const ErrorModalContainer = styled.div`
   height: auto;
   width: 450px;
   background-color: var(--lighterGray);
-  box-shadow: 0 0 0 20000px #00000076;
   opacity: 0.2;
   transition: opacity 0.15s ease-in-out;
-  z-index: 3;
+  z-index: 1;
 
   &.open {
     opacity: 1;
@@ -187,4 +208,5 @@ export {
   RadioContainer,
   ErrorModalContainer,
   ErrorModalHeader,
+  EditModalContainer,
 };

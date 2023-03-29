@@ -55,12 +55,18 @@ function App() {
   }, [state]);
 
   useEffect(() => {
-    if (isUpdating) {
-      const token = getItem("user").token;
-      console.log("isupdating");
-      getAll("tasks", token, setIsUpdating);
-      getAll("categories", token, setIsUpdating);
-    }
+    const fetchData = async () => {
+      if (isUpdating) {
+        const token = getItem("user").token;
+        console.log("isupdating");
+        await getAll("tasks", token);
+        await getAll("categories", token);
+        setAllTasks(getItem("tasks"));
+        setAllCategories(getItem("categories"));
+        setIsUpdating(false);
+      }
+    };
+    fetchData();
   }, [isUpdating]);
 
   const updateLogin = (name, token) => {
