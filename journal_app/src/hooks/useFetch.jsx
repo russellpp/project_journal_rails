@@ -36,7 +36,7 @@ export const useFetch = () => {
     }
   };
 
-  const getAll = async (model, token) => {
+  const getAll = async (model, token, setIsUpdating) => {
     const PATH_KEY = model === "tasks" ? "tasks" : "categories";
     console.log(`getting ${model}`);
     try {
@@ -49,10 +49,59 @@ export const useFetch = () => {
       });
       const data = await response.json();
       setItem(model, data);
+      setIsUpdating(true);
     } catch (error) {
       console.log(error);
     }
   };
 
-  return { getAll, logIn };
+  const createModel = async (
+    model,
+    token,
+    post_details,
+    setErrors,
+    setIsUpdating,
+    setOpenModals
+  ) => {
+    const PATH_KEY =
+      model === "task"
+        ? `categories/${post_details.category_id}/tasks`
+        : "categories";
+    console.log(`getting ${model}`);
+    try {
+      const response = await fetch(`${HOST_URL}/api/v1/${PATH_KEY}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(post_details),
+      });
+      const data = await response.json();
+      if (response.status === 422) {
+        console.log("setting errors");
+        setErrors({
+          status: true,
+          error_msg: data,
+        });
+      } else {
+        navigate("/dashboard/tasks");
+        console.log("setisupdating");
+        setIsUpdating(true);
+        setOpenModals((prevState) => ({
+          ...prevState,
+          new: !prevState.new,
+          sort: false,
+          edit: false,
+          delete: false,
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("setting errors");
+      setErrors(error);
+    }
+  };
+
+  return { getAll, logIn, createModel };
 };

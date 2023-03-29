@@ -11,7 +11,7 @@ const ModalContainer = styled.div`
   transform: translateX(-50%) translateY(-50%);
   min-height: 200px;
   height: auto;
-  width: 400px;
+  width: 300px;
   background-color: var(--lighterGray);
   box-shadow: 0 0 0 20000px #00000076;
   opacity: 0.2;
@@ -33,11 +33,12 @@ const ErrorModalContainer = styled.div`
   transform: translateX(-50%) translateY(-50%);
   min-height: 100px;
   height: auto;
-  width: 250px;
+  width: 450px;
   background-color: var(--lighterGray);
   box-shadow: 0 0 0 20000px #00000076;
   opacity: 0.2;
   transition: opacity 0.15s ease-in-out;
+  z-index: 3;
 
   &.open {
     opacity: 1;

@@ -14,11 +14,15 @@ import {
   CancelButton,
   RadioContainer,
 } from "./Modals";
+import { useFetch } from "../../hooks/useFetch";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 function NewModal(props) {
-  const { allCategories, openModals, setOpenModals } = props;
+  const { allCategories, openModals, setOpenModals, setIsUpdating, setErrors } = props;
+  const { createModel } = useFetch();
+  const { getItem } = useLocalStorage();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState("");
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const [taskDetails, setTaskDetails] = useState({
     name: "",
     description: "",
@@ -26,7 +30,7 @@ function NewModal(props) {
     due_date: "",
     priority: "normal",
     task_status: "pending",
-    category_id: "",
+    category_id: allCategories[selectedOptionIndex].id,
   });
 
   useEffect(() => {
@@ -34,7 +38,9 @@ function NewModal(props) {
   }, []);
 
   const handleSubmit = (e) => {
-    console.log(taskDetails);
+    e.preventDefault();
+    createModel("task", getItem("user").token, taskDetails, setErrors, setIsUpdating, setOpenModals);
+    
   };
 
   const handleSelectChange = (e) => {
@@ -89,7 +95,9 @@ function NewModal(props) {
           <SelectContainer>
             <FormLabel>Category</FormLabel>
             <Select value={selectedOptionIndex} onChange={handleSelectChange}>
-              <Option value="">Select an option</Option>
+              <Option value="" disabled>
+                Select a category
+              </Option>
               {allCategories.map((cat, index) => (
                 <Option key={index} value={index}>
                   {cat.name}

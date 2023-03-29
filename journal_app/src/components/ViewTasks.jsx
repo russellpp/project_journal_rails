@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import NewModal from "./modals/NewModal";
 
 function ViewTasks(props) {
-  const { allTasks, allCategories } = props;
+  const { allTasks, allCategories, errors, setErrors, isUpdating, setIsUpdating } = props;
   const [openModals, setOpenModals] = useState({
     new: false,
     sort: false,
@@ -18,7 +18,13 @@ function ViewTasks(props) {
   return (
     <ViewWrapper>
       {openModals.new && (
-        <NewModal openModals={openModals} setOpenModals={setOpenModals} allCategories={allCategories} />
+        <NewModal
+          openModals={openModals}
+          setOpenModals={setOpenModals}
+          allCategories={allCategories}
+          setErrors={setErrors}
+          setIsUpdating={setIsUpdating}
+        />
       )}
       <ViewOptions>
         <SortButton />

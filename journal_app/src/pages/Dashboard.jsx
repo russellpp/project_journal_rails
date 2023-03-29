@@ -13,8 +13,9 @@ import ViewCalendar from "../components/ViewCalendar";
 function Dashboard(props) {
   const {
     username,
-    token,
     loggedIn,
+    errors,
+    setErrors,
     isUpdating,
     setIsUpdating,
     allTasks,
@@ -32,11 +33,11 @@ function Dashboard(props) {
   }, [view]);
 
   useEffect(() => {
-    setIsUpdating(true);
-  }, []);
-
-  useEffect(() => {
     if (isUpdating) {
+      const token = getItem("user").token;
+      console.log("isupdating");
+      getAll("tasks", token);
+      getAll("categories", token);
       setAllTasks(getItem("tasks"));
       setAllCategories(getItem("categories"));
       setIsUpdating(false);
@@ -63,7 +64,13 @@ function Dashboard(props) {
           <Route
             path="/tasks"
             element={
-              <ViewTasks allTasks={allTasks} allCategories={allCategories} />
+              <ViewTasks
+                allTasks={allTasks}
+                allCategories={allCategories}
+                isUpdating={isUpdating}
+                setIsUpdating={setIsUpdating}
+                setErrors={setErrors}
+              />
             }
           />
           <Route path="/categories" element={<ViewCategories />} />

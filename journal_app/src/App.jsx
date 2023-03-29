@@ -6,14 +6,21 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Dashboard from "./pages/Dashboard";
+import ErrorModal from "./components/modals/ErrorModal";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 
 function App() {
   const navigate = useNavigate();
+  const { getItem } = useLocalStorage();
   const { getAll } = useFetch();
   const [token, setToken] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [allTasks, setAllTasks] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
+  const [errors, setErrors] = useState({
+    status: false,
+    error_msg: [],
+  });
   const [state, dispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
@@ -40,12 +47,21 @@ function App() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (state.loggedIn) {
-      getAll("tasks", user.token);
-      getAll("categories", user.token);
+      getAll("tasks", user.token, setIsUpdating);
+      getAll("categories", user.token), setIsUpdating;
+      setToken(user.token);
       navigate("/dashboard");
-      setIsUpdating(true);
     }
   }, [state]);
+
+  useEffect(() => {
+    if (isUpdating) {
+      const token = getItem("user").token;
+      console.log("isupdating");
+      getAll("tasks", token, setIsUpdating);
+      getAll("categories", token, setIsUpdating);
+    }
+  }, [isUpdating]);
 
   const updateLogin = (name, token) => {
     dispatch({
@@ -65,6 +81,7 @@ function App() {
 
   return (
     <>
+      {errors.status && <ErrorModal setErrors={setErrors} errors={errors} />}
       <Routes>
         <Route
           path="/login"
@@ -80,6 +97,8 @@ function App() {
           path="/dashboard/*"
           element={
             <Dashboard
+              errors={errors}
+              setErrors={setErrors}
               allCategories={allCategories}
               setAllCategories={setAllCategories}
               allTasks={allTasks}
