@@ -84,7 +84,6 @@ export const useFetch = () => {
           error_msg: data,
         });
       } else {
-        navigate("/dashboard/tasks");
         console.log("setisupdating");
         setIsUpdating(true);
         setOpenModals((prevState) => ({
@@ -130,7 +129,6 @@ export const useFetch = () => {
           error_msg: data,
         });
       } else {
-        navigate("/dashboard/tasks");
         console.log("setisupdating");
         setIsUpdating(true);
         setIsModalOpen(false);
@@ -164,7 +162,6 @@ export const useFetch = () => {
       console.log(response.headers.get("Content-Type"));
       const data = await response.json();
       console.log("item deleted");
-      navigate("/dashboard/tasks");
       console.log("setisupdating");
       setIsUpdating(true);
       setIsModalOpen(false);

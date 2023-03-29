@@ -23,6 +23,10 @@ function ViewTasks(props) {
     delete: false,
   });
 
+  useEffect(() => {
+    setIsUpdating(true);
+  }, []);
+
   return (
     <ViewWrapper>
       {openModals.new && (
@@ -43,11 +47,12 @@ function ViewTasks(props) {
           {allTasks?.map((task, index) => {
             return (
               <Task
-                setErrors={setErrors}
-                task={task}
                 key={index}
+                task={task}
+                setErrors={setErrors}
                 allCategories={allCategories}
                 setIsUpdating={setIsUpdating}
+                isUpdating={isUpdating}
               />
             );
           })}
@@ -68,6 +73,14 @@ const ViewOptions = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 15%;
+  margin-bottom: 10px;
+  > h1 {
+    color: var(--yellow);
+    text-align: center;
+    padding-top: 5px;
+    padding-left: 10px;
+    font-size: 40px;
+  }
 `;
 const List = styled.div`
   height: 100%;
@@ -96,3 +109,4 @@ const ListWrapper = styled.div`
 `;
 
 export default ViewTasks;
+export { ViewWrapper, ViewOptions, ListWrapper, List };

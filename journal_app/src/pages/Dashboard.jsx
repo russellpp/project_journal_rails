@@ -43,7 +43,11 @@ function Dashboard(props) {
         <h1>Hello {username}</h1>
         <button onClick={updateUp}></button>
         <ViewType>
-          <OptionsSlider view={view} setView={setView} />
+          <OptionsSlider
+            view={view}
+            setView={setView}
+            setIsUpdating={setIsUpdating}
+          />
         </ViewType>
       </Header>
       <Body>
@@ -61,10 +65,21 @@ function Dashboard(props) {
               />
             }
           />
-          <Route path="/categories" element={<ViewCategories />} />
+          <Route
+            path="/categories"
+            element={
+              <ViewCategories
+                allTasks={allTasks}
+                allCategories={allCategories}
+                isUpdating={isUpdating}
+                setIsUpdating={setIsUpdating}
+                setErrors={setErrors}
+              />
+            }
+          />
           <Route path="/category" element={<ViewCategory />} />
           <Route path="/calendar" element={<ViewCalendar />} />
-          <Route path="/*" element={<Navigate to="/dashboard/today" />} />
+          {/* <Route path="/*" element={<Navigate to="/dashboard/today" />} /> */}
         </Routes>
       </Body>
     </PageWrapper>

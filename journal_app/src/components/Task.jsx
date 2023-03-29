@@ -15,11 +15,18 @@ import EditModal from "./modals/EditModal";
 import DeleteModal from "./modals/DeleteModal";
 
 function Task(props) {
-  const { setErrors, task, allCategories, setIsUpdating } = props;
+  const {
+    setErrors,
+    task,
+    allCategories,
+    setIsUpdating,
+    isUpdating,
+    isInCategory,
+  } = props;
   const [isChecked, setIsChecked] = useState(false);
   const [isEditOpen, setIsEditopen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [priorityStatus, setPriorityStatus] = useState("normal");
+  const [priorityStatus, setPriorityStatus] = useState(task.priority);
   const [taskCategory, setTaskCategory] = useState("");
 
   useEffect(() => {
@@ -27,9 +34,9 @@ function Task(props) {
     setTaskCategory(allCategories.find((cat) => cat.id === task.category_id));
   }, []);
 
-  const handleCheck = (event) => {
-    setIsChecked(event.target.checked);
-  };
+  useEffect(() => {
+    setPriorityStatus(task.priority);
+  }, [isUpdating]);
 
   return (
     <>
@@ -57,15 +64,22 @@ function Task(props) {
         <DueTime>{formatTimeLeft(task.due_date)}</DueTime>
         <DueDate>Due on {convertToDate(task.due_date)}</DueDate>
         <Name>{task.name}</Name>
-        <Category color={getColorById(task.category_id)}>
-          {taskCategory?.name}
-        </Category>
+        {!isInCategory && (
+          <Category color={getColorById(task.category_id)}>
+            {taskCategory?.name}
+          </Category>
+        )}
         <Description>{task.description}</Description>
-        <Priority>
+        <Priority color={priorityColors[priorityStatus]}>
           <PriorityMark color={priorityColors[priorityStatus]} />
+          <p>{task?.priority}</p>
         </Priority>
         <CheckBox>
-          <Checkbox checked={isChecked} onChange={handleCheck} />
+          <Checkbox
+            setIsUpdating={setIsUpdating}
+            task={task}
+            setErrors={setErrors}
+          />
         </CheckBox>
         <Edit>
           <EditButton
@@ -92,7 +106,8 @@ const TaskContainer = styled.div`
   color: white;
   display: grid;
   justify-items: center;
-  grid-template-columns: 10% 7% 25% 25% 15% 8% 5% 5%;
+  align-items: center;
+  grid-template-columns: 10% 10% 25% 25% 12% 8% 5% 5%;
   grid-template-areas:
     "time1 prio name desc time2 check edit delete"
     "date1 prio category desc date2 check edit delete";
@@ -142,6 +157,16 @@ const Description = styled.span`
 
 const Priority = styled.div`
   grid-area: prio;
+  display: flex;
+  flex-direction: row;
+  justify-self: left;
+  justify-items: center;
+  align-items: center;
+  color: ${({ color }) => color};
+  > p {
+    text-transform: uppercase;
+    font-size: 10px;
+  }
 `;
 
 const CheckBox = styled.div`

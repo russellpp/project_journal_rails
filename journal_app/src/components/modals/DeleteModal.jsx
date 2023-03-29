@@ -11,7 +11,14 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useFetch } from "../../hooks/useFetch";
 
 function DeleteModal(props) {
-  const { setIsDeleteOpen, task, setIsUpdating, setErrors } = props;
+  const {
+    setIsDeleteOpen,
+    task,
+    category,
+    setIsUpdating,
+    setErrors,
+    isInCategory,
+  } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { getItem } = useLocalStorage();
   const { deleteModel } = useFetch();
@@ -19,7 +26,11 @@ function DeleteModal(props) {
 
   useEffect(() => {
     setIsOpen(true);
-    setItem(task);
+    if (!isInCategory) {
+      setItem(task);
+    } else {
+      setItem(category);
+    }
   }, []);
 
   const handleClose = () => {
@@ -30,7 +41,14 @@ function DeleteModal(props) {
   const handleDelete = (e) => {
     e.preventDefault();
     const token = getItem("user").token;
-    deleteModel("task", token, task, setErrors, setIsUpdating, setIsDeleteOpen);
+    deleteModel(
+      isInCategory ? "category" : "task",
+      token,
+      item,
+      setErrors,
+      setIsUpdating,
+      setIsDeleteOpen
+    );
   };
 
   return (
@@ -46,23 +64,5 @@ function DeleteModal(props) {
     </ErrorModalContainer>
   );
 }
-
-const ErrorMessage = styled.div`
-  color: white;
-  margin-bottom: 10px;
-
-  > p {
-    text-transform: capitalize;
-    color: var(--burgundy);
-    font-weight: bold;
-  }
-
-  > ul {
-    color: var(--gray);
-
-    > li {
-    }
-  }
-`;
 
 export default DeleteModal;

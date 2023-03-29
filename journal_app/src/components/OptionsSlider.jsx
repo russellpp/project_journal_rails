@@ -5,11 +5,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const OptionSlider = (props) => {
-  const { view, setView } = props;
+  const { view, setView, setIsUpdating } = props;
   const options = ["Today", "Tasks", "Categories", "Category", "Calendar"];
 
   const handleOptionClick = (index) => {
     setView(options[index]);
+    setIsUpdating(true)
   };
 
   const sliderSettings = {
