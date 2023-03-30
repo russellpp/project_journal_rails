@@ -43,7 +43,7 @@ function ViewCategories(props) {
         />
       )}
       <ViewOptions>
-        <h1></h1>
+        <h1>Add Category</h1>
         <AddButton openModals={openModals} setOpenModals={setOpenModals} />
       </ViewOptions>
       <ListWrapper>

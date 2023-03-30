@@ -6,7 +6,7 @@ export const useFetch = () => {
   const { getItem, setItem } = useLocalStorage();
   const navigate = useNavigate();
 
-  const logIn = async (state, setState, updateLogin) => {
+  const logIn = async (state, setState, updateLogin, setErrors) => {
     try {
       const response = await fetch(`${HOST_URL}/api/v1/login`, {
         method: "POST",
@@ -21,18 +21,68 @@ export const useFetch = () => {
         }),
       });
       const data = await response.json();
-      localStorage.clear();
-      const userInfo = {
-        id: data.user.id,
-        username: data.user.username,
-        token: data.jwt,
-      };
-      localStorage.setItem("user", JSON.stringify(userInfo));
-      localStorage.setItem("logged_in", true);
-      updateLogin(userInfo?.username, userInfo?.token);
-      navigate("/dashboard");
+      if (response.status === 401 || response.status === 422) {
+        setErrors({
+          status: true,
+          error_msg: data,
+        });
+        console.log(data);
+      } else {
+        localStorage.clear();
+        const userInfo = {
+          id: data.user.id,
+          username: data.user.username,
+          token: data.jwt,
+        };
+        localStorage.setItem("user", JSON.stringify(userInfo));
+        localStorage.setItem("logged_in", true);
+        updateLogin(userInfo?.username, userInfo?.token);
+        navigate("/dashboard");
+      }
     } catch (error) {
-      setState({ displayError: data.error });
+      setState({ displayError: error });
+    }
+  };
+
+  const signUp = async (state, setState, setErrors) => {
+    try {
+      const response = await fetch(`${HOST_URL}/api/v1/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: {
+            username: state?.username,
+            password: state?.password,
+            password_confirmation: state?.password_confirmation,
+          },
+        }),
+      });
+      const data = await response.json();
+      if (
+        response.status === 401 ||
+        response.status === 422 ||
+        response.status === 406
+      ) {
+        setErrors({
+          status: true,
+          error_msg: data,
+        });
+        console.log(data);
+      } else {
+        localStorage.clear();
+        const userInfo = {
+          id: data.user.id,
+          username: data.user.username,
+          token: data.jwt,
+        };
+        localStorage.setItem("user", JSON.stringify(userInfo));
+        localStorage.setItem("logged_in", true);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      setState({ displayError: error });
     }
   };
 
@@ -77,8 +127,8 @@ export const useFetch = () => {
         body: JSON.stringify(post_details),
       });
       const data = await response.json();
-      if (response.status === 422) {
-        console.log("setting errors");
+      if (response.status === 422 || response.status === 404) {
+        console.log(data);
         setErrors({
           status: true,
           error_msg: data,
@@ -171,5 +221,5 @@ export const useFetch = () => {
     }
   };
 
-  return { getAll, logIn, createModel, editModel, deleteModel };
+  return { getAll, logIn, createModel, editModel, deleteModel, signUp };
 };

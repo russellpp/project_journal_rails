@@ -52,7 +52,7 @@ function App() {
       setToken(user.token);
       navigate("/dashboard");
     }
-  }, [state]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,17 +92,19 @@ function App() {
         <Route
           path="/login"
           element={
-            <Login loggedIn={state.loggedIn} updateLogin={updateLogin} />
+            <Login
+              errors={errors}
+              setErrors={setErrors}
+              loggedIn={state.loggedIn}
+              updateLogin={updateLogin}
+            />
           }
-        />
-        <Route
-          path="/logout"
-          element={<Logout loggedIn={state.loggedIn} clearUser={clearUser} />}
         />
         <Route
           path="/dashboard/*"
           element={
             <Dashboard
+              clearUser={clearUser}
               errors={errors}
               setErrors={setErrors}
               allCategories={allCategories}
@@ -117,7 +119,16 @@ function App() {
             />
           }
         />
-        <Route path="/signup" element={<SignUp loggedIn={state.loggedIn} />} />
+        <Route
+          path="/signup"
+          element={
+            <SignUp
+              loggedIn={state.loggedIn}
+              errors={errors}
+              setErrors={setErrors}
+            />
+          }
+        />
       </Routes>
     </>
   );

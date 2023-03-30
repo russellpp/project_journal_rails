@@ -58,7 +58,7 @@ function Task(props) {
           setIsDeleteOpen={setIsDeleteOpen}
         />
       )}
-      <TaskContainer>
+      <TaskContainer strike={task.task_status}>
         <StartTime>{convertToHours(task.start_date)}</StartTime>
         <StartDate>{convertToDate(task.start_date)}</StartDate>
         <DueTime>{formatTimeLeft(task.due_date)}</DueTime>
@@ -101,7 +101,7 @@ function Task(props) {
 }
 
 const TaskContainer = styled.div`
-  margin: 10px 15px;
+  margin: 15px 15px;
   font-size: 14px;
   color: white;
   display: grid;
@@ -111,6 +111,15 @@ const TaskContainer = styled.div`
   grid-template-areas:
     "time1 prio name desc time2 check edit delete"
     "date1 prio category desc date2 check edit delete";
+  &:hover {
+    background-color: #acb3936e;
+  }
+  ${({ strike }) =>
+    strike === "completed"
+      ? `
+        background-color: #a0969671
+      `
+      : ""}
 `;
 
 const StartTime = styled.span`
@@ -183,3 +192,4 @@ const Delete = styled.div`
 `;
 
 export default Task;
+export { Priority };

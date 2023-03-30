@@ -2,9 +2,11 @@ import React from "react";
 import { Sort } from "@material-ui/icons";
 import styled from "styled-components";
 
-function SortButton() {
+function SortButton(props) {
+  const { handleSortOrderToggle } = props;
+
   return (
-    <Button>
+    <Button onClick={handleSortOrderToggle}>
       <SortIcon />
     </Button>
   );
@@ -17,10 +19,10 @@ const Button = styled.button`
   color: var(--yellow);
   cursor: pointer;
   height: 50px;
-  width: 50px;
+  max-width: 50px;
   text-transform: uppercase;
   transition: all 0.1s ease-in-out;
-
+  
   &:hover {
     background-color: var(--gray);
     color: var(--blue);

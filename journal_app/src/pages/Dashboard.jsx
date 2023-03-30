@@ -9,12 +9,15 @@ import ViewTasks from "../components/ViewTasks";
 import ViewCategories from "../components/ViewCategories";
 import ViewCategory from "../components/ViewCategory";
 import ViewCalendar from "../components/ViewCalendar";
+import Clock from "../components/Clock";
+import { ExitToApp } from "@material-ui/icons";
 
 function Dashboard(props) {
   const {
     username,
     loggedIn,
     errors,
+    clearUser,
     setErrors,
     isUpdating,
     setIsUpdating,
@@ -32,16 +35,22 @@ function Dashboard(props) {
     navigate(`/dashboard/${view.toLowerCase()}`);
   }, [view]);
 
-  const updateUp = () => {
-    console.log("isupdating");
-    setIsUpdating(true);
+  const handleLogOut = () => {
+    clearUser();
+    localStorage.clear();
+    navigate("/login");
   };
 
   return (
     <PageWrapper>
+      <LogOut onClick={handleLogOut}>
+        <ExitToApp style={{ fontSize: "37px" }} />
+      </LogOut>
       <Header>
-        <h1>Hello {username}</h1>
-        <button onClick={updateUp}></button>
+        <HeaderContainer>
+          <h1>My Journal</h1>
+          <Clock></Clock>
+        </HeaderContainer>
         <ViewType>
           <OptionsSlider
             view={view}
@@ -52,7 +61,18 @@ function Dashboard(props) {
       </Header>
       <Body>
         <Routes>
-          <Route path="/today" element={<ViewToday />} />
+          <Route
+            path="/today"
+            element={
+              <ViewToday
+                allTasks={allTasks}
+                allCategories={allCategories}
+                isUpdating={isUpdating}
+                setIsUpdating={setIsUpdating}
+                setErrors={setErrors}
+              />
+            }
+          />
           <Route
             path="/tasks"
             element={
@@ -77,14 +97,31 @@ function Dashboard(props) {
               />
             }
           />
-          <Route path="/category" element={<ViewCategory />} />
-          <Route path="/calendar" element={<ViewCalendar />} />
           {/* <Route path="/*" element={<Navigate to="/dashboard/today" />} /> */}
         </Routes>
       </Body>
     </PageWrapper>
   );
 }
+
+const LogOut = styled.button`
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 70px;
+  height: 70px;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  background-color: black;
+  color: var(--yellow);
+  transition: all 0.3s ease-in;
+
+  & :hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+`;
 
 const PageWrapper = styled.div`
   height: 100vh;
@@ -116,8 +153,21 @@ const Header = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  margin-top: 20px;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 1000px;
+  > h1 {
+    color: var(--lightGray);
+  }
+`;
+
 const ViewType = styled.div`
   border: 1px white;
+  margin-top: 15px;
   overflow-x: visible;
 `;
 

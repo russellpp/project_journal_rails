@@ -51,7 +51,7 @@ const formatTimeLeft = (datetimeString) => {
     return `${minutesLeft} minute${minutesLeft === 1 ? "" : "s"} left`;
   } else if (diff < 24 * 60 * 60 * 1000) {
     const hoursLeft = Math.floor(diff / (60 * 60 * 1000));
-    return `in ${hoursLeft} hour${hoursLeft === 1 ? "" : "s"} left`;
+    return `${hoursLeft} hour${hoursLeft === 1 ? "" : "s"} left`;
   } else if (diff < 30 * 24 * 60 * 60 * 1000) {
     const daysLeft = Math.floor(diff / (24 * 60 * 60 * 1000));
     return `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`;

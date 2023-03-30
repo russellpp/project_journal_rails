@@ -74,6 +74,8 @@ function EditModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(taskDetails.start_date);
+    console.log(taskDetails.due_date);
     editModel(
       isInCategory ? "category" : "task",
       getItem("user").token,

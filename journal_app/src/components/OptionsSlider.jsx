@@ -6,11 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 
 const OptionSlider = (props) => {
   const { view, setView, setIsUpdating } = props;
-  const options = ["Today", "Tasks", "Categories", "Category", "Calendar"];
+  const options = ["Today", "Tasks", "Categories"];
 
   const handleOptionClick = (index) => {
     setView(options[index]);
-    setIsUpdating(true)
+    setIsUpdating(true);
   };
 
   const sliderSettings = {
@@ -19,6 +19,7 @@ const OptionSlider = (props) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+
     beforeChange: (current, next) => {
       handleOptionClick(next);
     },
@@ -28,12 +29,9 @@ const OptionSlider = (props) => {
 
   return (
     <SliderContainer>
-      <h3>Selected option: {view}</h3>
       <Slider {...sliderSettings}>
         {options.map((option, index) => (
-          <div key={index}>
-            <button>{option}</button>
-          </div>
+          <Option key={index}>{option}</Option>
         ))}
       </Slider>
     </SliderContainer>
@@ -46,22 +44,19 @@ const SliderContainer = styled.div`
   overflow-x: visible;
 
   .slick-slide {
-    margin: 0 20px;
+    margin: 0 0;
   }
 
   .slick-center {
-    transform: scale(1.2);
+    transform: scale(1.5);
   }
-
-  .slick-dots li button:before {
-    font-size: 12px;
-    color: #fff;
-    opacity: 0.5;
-  }
-
-  .slick-dots li.slick-active button:before {
-    opacity: 1;
-  }
+`;
+const Option = styled.div`
+  text-align: center;
+  margin-right: 100px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  font-size: 40px;
 `;
 
 const ArrowButton = styled.button`
@@ -72,7 +67,7 @@ const ArrowButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: transparent;
   border: none;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   outline: none;
@@ -81,12 +76,17 @@ const ArrowButton = styled.button`
 
   &:hover {
     transform: translateY(-50%) scale(1.1);
+    background-color: var(--lightGray);
+    &::before {
+      color: var(--burgundy);
+    }
   }
 
   &::before {
     content: "";
     display: block;
     width: 10px;
+    color: var(--yellow);
     height: 10px;
     border-style: solid;
     border-width: 0 2px 2px 0;

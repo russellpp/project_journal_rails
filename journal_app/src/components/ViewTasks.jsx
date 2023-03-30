@@ -39,8 +39,12 @@ function ViewTasks(props) {
         />
       )}
       <ViewOptions>
-        <SortButton />
-        <AddButton openModals={openModals} setOpenModals={setOpenModals} />
+        <p>Starts on</p>
+        <span>Deadline</span>
+        <h3>Priority</h3>
+        <div>
+          <AddButton openModals={openModals} setOpenModals={setOpenModals} />
+        </div>
       </ViewOptions>
       <ListWrapper>
         <List>
@@ -69,18 +73,58 @@ const ViewWrapper = styled.div`
 `;
 
 const ViewOptions = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 10% 10% 25% 25% 12% 8% 5% 5%;
+  grid-template-areas:
+    "time1 prio name desc time2 edit edit delete"
+    "date1 prio category desc date2 edit edit delete";
   width: 100%;
   height: 15%;
   margin-bottom: 10px;
   > h1 {
+    grid-area: edit;
     color: var(--yellow);
-    text-align: center;
-    padding-top: 5px;
-    padding-left: 10px;
-    font-size: 40px;
+    font-size: 15px;
   }
+  > div {
+    grid-area: delete;
+  }
+  > p {
+    font-size: 15px;
+    grid-area: date1;
+    font-weight: 600;
+    justify-self: right;
+    color: var(--yellow);
+  }
+  > span {
+    font-size: 15px;
+    color: var(--yellow);
+    grid-area: date2;
+  }
+  > h3 {
+    font-size: 15px;
+    color: var(--yellow);
+    grid-area: prio;
+    font-weight: 500;
+    align-self: flex-end;
+  }
+  > button {
+    grid-area: delete;
+  }
+`;
+
+const Select = styled.select`
+  font-size: 15pxrem;
+  padding: 0.5rem;
+  background-color: var(--darkGray);
+  color: var(--yellow);
+  border: 2px solid var(--yellow);
+`;
+
+const SelectContainer = styled.div`
+  position: relative;
 `;
 const List = styled.div`
   height: 100%;
@@ -89,15 +133,13 @@ const List = styled.div`
 
 const ListWrapper = styled.div`
   overflow-y: auto;
-  height: 650px; /* set a custom height */
+  height: 650px;
   scrollbar-width: none;
-  -ms-overflow-style: none; /* for Internet Explorer and Edge */
-  /* hide the default scrollbar */
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
   }
 
-  /* add a custom scrollbar */
   ::-webkit-scrollbar-track {
     background-color: transparent;
   }

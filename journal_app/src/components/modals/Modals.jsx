@@ -50,6 +50,8 @@ const ErrorModalContainer = styled.div`
   flex-direction: column;
   box-sizing: content-box;
   border-radius: 20px;
+
+  border: 5px solid var(--burgundy);
   top: 40vh;
   left: 50vw;
   transform: translateX(-50%) translateY(-50%);
@@ -76,8 +78,8 @@ const ModalHeader = styled.div`
 `;
 
 const ErrorModalHeader = styled.div`
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   padding: 15px;
   font-weight: bold;
   background-color: var(--burgundy);

@@ -41,7 +41,7 @@ function NewModal(props) {
     task_status: "pending",
     category_id: isTaskInCategory
       ? category.id
-      : allCategories[selectedOptionIndex].id,
+      : allCategories[selectedOptionIndex]?.id,
   });
 
   useEffect(() => {
