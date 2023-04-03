@@ -6,6 +6,7 @@ import SortButton from "./buttons/SortButton";
 import { useState, useEffect } from "react";
 import NewModal from "./modals/NewModal";
 import EditModal from "./modals/EditModal";
+import { EmptyArrayView } from "./ViewToday";
 
 function ViewTasks(props) {
   const {
@@ -38,31 +39,45 @@ function ViewTasks(props) {
           setIsUpdating={setIsUpdating}
         />
       )}
-      <ViewOptions>
-        <p>Starts on</p>
-        <span>Deadline</span>
-        <h3>Priority</h3>
-        <div>
-          <AddButton openModals={openModals} setOpenModals={setOpenModals} />
-        </div>
-      </ViewOptions>
-      <ListWrapper>
-        <List>
-          {allTasks?.map((task, index) => {
-            return (
-              <Task
-                key={index}
-                task={task}
-                setErrors={setErrors}
-                allCategories={allCategories}
-                setIsUpdating={setIsUpdating}
-                isUpdating={isUpdating}
+
+      {allCategories.length === 0 && (
+        <EmptyArrayView>
+          <h1>ADD A CATEGORY</h1>
+        </EmptyArrayView>
+      )}
+      {allCategories.length !== 0 && (
+        <>
+          <ViewOptions>
+            <p>Starts on</p>
+            <span>Deadline</span>
+            <h3>Priority</h3>
+            <div>
+              <AddButton
+                openModals={openModals}
+                setOpenModals={setOpenModals}
               />
-            );
-          })}
-        </List>
-        1
-      </ListWrapper>
+            </div>
+          </ViewOptions>
+
+          <ListWrapper>
+            <List>
+              {allTasks?.map((task, index) => {
+                return (
+                  <Task
+                    key={index}
+                    task={task}
+                    setErrors={setErrors}
+                    allCategories={allCategories}
+                    setIsUpdating={setIsUpdating}
+                    isUpdating={isUpdating}
+                  />
+                );
+              })}
+            </List>
+            1
+          </ListWrapper>
+        </>
+      )}
     </ViewWrapper>
   );
 }

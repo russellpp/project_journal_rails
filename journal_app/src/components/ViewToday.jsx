@@ -36,61 +36,103 @@ function ViewToday(props) {
     (a, b) => moment(a.time, "HH:mm") - moment(b.time, "HH:mm")
   );
 
+  const handleClick = () => {
+    console.log(tasksDueToday);
+  };
+
   return (
     <Container>
-      <VerticalTimeline>
-        {sortedTasks?.map((task, index) => {
-          return (
-            <StyledVerticalElement
-              key={index}
-              position={task.position}
-              className="vertical-timeline-element--work"
-              contentStyle={
-                task.position === "left"
-                  ? { background: "var(--yellow)", color: "#fff" }
-                  : { background: "var(--burgundy)", color: "#fff" }
-              }
-              contentArrowStyle={
-                task.position === "left"
-                  ? {
-                      borderRight: "7px solid  var(--yellow)",
-                    }
-                  : {
-                      borderRight: "7px solid  var(--burgundy)",
-                    }
-              }
-              date={
-                task.position === "left"
-                  ? `Starts on ${task.time}`
-                  : `Due on ${task.time}`
-              }
-              iconStyle={
-                task.position === "left"
-                  ? { background: "var(--yellow)", color: "#fff" }
-                  : { background: "var(--burgundy)", color: "#fff" }
-              }
-            >
-              <TextContainer>
-                <h3 className="vertical-timeline-element-title">{task.name}</h3>
-                <h4 className="vertical-timeline-element-subtitle">
-                  {
-                    allCategories.find((cat) => cat.id === task.category_id)
-                      .name
+      {allTasks.length === 0 && allCategories.length === 0 && (
+        <EmptyArrayView>
+          <h1>Add a category</h1>
+        </EmptyArrayView>
+      )}
+      {allTasks.length === 0 && allCategories.length !== 0 && (
+        <EmptyArrayView>
+          <h1>Add a task</h1>
+        </EmptyArrayView>
+      )}
+      {allTasks.length !== 0 &&
+        allCategories.length !== 0 &&
+        sortedTasks.length === 0 && (
+          <EmptyArrayView>
+            <h1>No tasks for today</h1>
+          </EmptyArrayView>
+        )}
+      {allTasks.length !== 0 &&
+        allCategories.length !== 0 &&
+        sortedTasks.length !== 0 && (
+          <VerticalTimeline>
+            {sortedTasks?.map((task, index) => {
+              return (
+                <StyledVerticalElement
+                  key={index}
+                  position={task.position}
+                  className="vertical-timeline-element--work"
+                  contentStyle={
+                    task.position === "left"
+                      ? { background: "var(--yellow)", color: "#fff" }
+                      : { background: "var(--burgundy)", color: "#fff" }
                   }
-                </h4>
-                <p>{task.description}</p>
-                <Priority color={priorityColors[task.priority]}>
-                  <PriorityMark color={priorityColors[task.priority]} />
-                  <p>{task?.priority} priority</p>
-                </Priority>
-              </TextContainer>
-            </StyledVerticalElement>
-          );
-        })}
-      </VerticalTimeline>
+                  contentArrowStyle={
+                    task.position === "left"
+                      ? {
+                          borderRight: "7px solid  var(--yellow)",
+                        }
+                      : {
+                          borderRight: "7px solid  var(--burgundy)",
+                        }
+                  }
+                  date={
+                    task.position === "left"
+                      ? `Starts on ${task.time}`
+                      : `Due on ${task.time}`
+                  }
+                  iconStyle={
+                    task.position === "left"
+                      ? { background: "var(--yellow)", color: "#fff" }
+                      : { background: "var(--burgundy)", color: "#fff" }
+                  }
+                >
+                  <TextContainer>
+                    <h3 className="vertical-timeline-element-title">
+                      {task.name}
+                    </h3>
+                    <h4 className="vertical-timeline-element-subtitle">
+                      {
+                        allCategories.find((cat) => cat.id === task.category_id)
+                          .name
+                      }
+                    </h4>
+                    <p>{task.description}</p>
+                    <Priority color={priorityColors[task.priority]}>
+                      <PriorityMark color={priorityColors[task.priority]} />
+                      <p>{task?.priority} priority</p>
+                    </Priority>
+                  </TextContainer>
+                </StyledVerticalElement>
+              );
+            })}
+          </VerticalTimeline>
+        )}
     </Container>
   );
 }
+
+const EmptyArrayView = styled.div`
+  text-align: center;
+  margin-top: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  > h1 {
+    color: var(--lightGray);
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 50px;
+    margin-right: 30px;
+  }
+`;
 
 const StyledVerticalElement = styled(VerticalTimelineElement)``;
 
@@ -151,3 +193,5 @@ const PriorityMark = styled.div`
 `;
 
 export default ViewToday;
+
+export { EmptyArrayView };

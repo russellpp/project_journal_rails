@@ -61,7 +61,7 @@ const ErrorModalContainer = styled.div`
   background-color: var(--lighterGray);
   opacity: 0.2;
   transition: opacity 0.15s ease-in-out;
-  z-index: 1;
+  z-index: 5;
 
   &.open {
     opacity: 1;
@@ -173,28 +173,59 @@ const CancelButton = styled.button`
 `;
 
 const SelectContainer = styled.div`
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-bottom: 10px;
+  > label {
+    margin-bottom: 10px;
+  }
 `;
 
 const Select = styled.select`
-  padding: 0.5rem 1rem;
+  padding: 3px 5px;
   border-radius: 4px;
   border: 1px solid gray;
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2px;
 `;
 
 const Option = styled.option`
   font-size: 1rem;
+  margin-right: 10px;
 `;
 
 const FormLabel = styled.label``;
 
-const FormInput = styled.input``;
+const FormInput = styled.input`
+  margin: 10px 0;
+  height: 25px;
+`;
 
-const RadioContainer = styled.div``;
+const RadioContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  margin-right: 10px;
+  > label {
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-top: 13px;
+  }
+  > :nth-child(7) {
+    color: red;
+    font-weight: 600;
+  }
+  > :nth-child(5) {
+    color: green;
+    font-weight: 600;
+  }
+  > :nth-child(3) {
+    color: gray;
+    font-weight: 600;
+  }
+`;
 export {
   ModalBody,
   ModalContainer,
